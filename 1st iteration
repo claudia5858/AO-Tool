@@ -1,0 +1,110 @@
+import React, { useState } from 'react';
+
+const ClaimsDashboard = () => {
+  const planOptions = [
+    "Requesting Medical Records",
+    "Reviewing Medical Records",
+    "In the process of Proof of Loss (POL)",
+    "Awaiting Peer Review Report",
+    "Awaiting Any Occupation (AO) Report",
+    "Submitted decision for sign-off",
+    "Completed"
+  ];
+
+  const initialClaims = [
+    {
+      id: "12345",
+      aoDate: "03/01/2025",
+      ltdAnalyst: "Jane Smith",
+      status: "Requesting Medical",
+      plan: "Requesting Medical Records",
+      timely: "Yes"
+    },
+    {
+      id: "23456",
+      aoDate: "01/01/2025",
+      ltdAnalyst: "John Doe",
+      status: "Awaiting Peer Review",
+      plan: "Reviewing Medical Records",
+      timely: "No – already late."
+    }
+  ];
+
+  const [claims, setClaims] = useState(initialClaims);
+
+  const getStatusColor = (status) => {
+    const statusColors = {
+      "Requesting Medical": "bg-yellow-100",
+      "Awaiting Peer Review": "bg-blue-100"
+    };
+    return statusColors[status] || "bg-gray-100";
+  };
+
+  const getTimelyColor = (timely) => {
+    return timely.toLowerCase().includes('no') ? "bg-red-100" : "bg-green-100";
+  };
+
+  const handlePlanChange = (claimId, newPlan) => {
+    setClaims(claims.map(claim => 
+      claim.id === claimId 
+        ? { ...claim, plan: newPlan }
+        : claim
+    ));
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">Claims Management Dashboard</h1>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-gray-50 border-b border-gray-200">
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">Claim ID #</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">AO Date</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">LTD Analyst</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">Status</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">Plan</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">Will decision be timely?</th>
+            </tr>
+          </thead>
+          <tbody>
+            {claims.map((claim) => (
+              <tr key={claim.id} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="px-4 py-3 font-medium text-gray-800">{claim.id}</td>
+                <td className="px-4 py-3 text-gray-600">{claim.aoDate}</td>
+                <td className="px-4 py-3 text-gray-600">{claim.ltdAnalyst}</td>
+                <td className="px-4 py-3">
+                  <span className={`inline-block px-2 py-1 rounded-full text-sm ${getStatusColor(claim.status)} text-gray-800`}>
+                    {claim.status}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <select 
+                    value={claim.plan}
+                    onChange={(e) => handlePlanChange(claim.id, e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {planOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-3">
+                  <span className={`inline-block px-2 py-1 rounded-full text-sm ${getTimelyColor(claim.timely)} text-gray-800`}>
+                    {claim.timely}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default ClaimsDashboard;
