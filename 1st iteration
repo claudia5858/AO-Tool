@@ -11,6 +11,8 @@ const ClaimsDashboard = () => {
     "Completed"
   ];
 
+  const yesNoOptions = ["Yes", "No"];
+
   const initialClaims = [
     {
       id: "12345",
@@ -18,6 +20,8 @@ const ClaimsDashboard = () => {
       ltdAnalyst: "Jane Smith",
       status: "Requesting Medical",
       plan: "Requesting Medical Records",
+      dateLastLetter: "Yes",
+      polInProgress: "No",
       timely: "Yes"
     },
     {
@@ -26,6 +30,8 @@ const ClaimsDashboard = () => {
       ltdAnalyst: "John Doe",
       status: "Awaiting Peer Review",
       plan: "Reviewing Medical Records",
+      dateLastLetter: "No",
+      polInProgress: "Yes",
       timely: "No – already late."
     }
   ];
@@ -52,8 +58,16 @@ const ClaimsDashboard = () => {
     ));
   };
 
+  const handleYesNoChange = (claimId, field, value) => {
+    setClaims(claims.map(claim => 
+      claim.id === claimId 
+        ? { ...claim, [field]: value }
+        : claim
+    ));
+  };
+
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-800">Claims Management Dashboard</h1>
       </div>
@@ -66,6 +80,8 @@ const ClaimsDashboard = () => {
               <th className="px-4 py-3 text-left font-semibold text-gray-600">LTD Analyst</th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Status</th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Plan</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">Date of Last Letter</th>
+              <th className="px-4 py-3 text-left font-semibold text-gray-600">POL in Progress</th>
               <th className="px-4 py-3 text-left font-semibold text-gray-600">Will decision be timely?</th>
             </tr>
           </thead>
@@ -87,6 +103,32 @@ const ClaimsDashboard = () => {
                     className="w-full bg-white border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
                     {planOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-3">
+                  <select 
+                    value={claim.dateLastLetter}
+                    onChange={(e) => handleYesNoChange(claim.id, 'dateLastLetter', e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {yesNoOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td className="px-4 py-3">
+                  <select 
+                    value={claim.polInProgress}
+                    onChange={(e) => handleYesNoChange(claim.id, 'polInProgress', e.target.value)}
+                    className="w-full bg-white border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {yesNoOptions.map((option) => (
                       <option key={option} value={option}>
                         {option}
                       </option>
